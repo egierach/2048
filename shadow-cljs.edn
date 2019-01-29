@@ -1,0 +1,29 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/main"
+  "src/test"]
+
+ :dependencies
+ [[re-frame "0.10.6"]]
+
+ :nrepl {:port 8777}
+
+ :builds
+ {:app {:target :browser
+        :modules {:main
+                  {:entries [app.core]}}
+
+        :output-dir "public/js"
+        :asset-path "/js"
+
+        :compiler-options {:closure-warnings {:global-this :off}
+                           :optimizations :whitespace}
+
+        :devtools {:http-root "public"
+                   :http-handler shadow.http.push-state/handle
+                   :http-port 8700
+                   :after-load shadow-re-frame.simple/render
+                   :preloads []}}
+  :test {:target :node-test
+         :output-to "out/node-test.js"
+         :autorun true}}}

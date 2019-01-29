@@ -1,0 +1,12 @@
+{
+  "description": "Clojurescript implementation of the game 2048.",
+  "repository": "",
+  "license": "",
+  "scripts": {},
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-flip-move": "^3.0.3"
+  }
+}
