@@ -4,7 +4,8 @@
   "src/test"]
 
  :dependencies
- [[re-frame "0.10.6"]]
+ [[re-frame "0.10.6"]
+  [cljsjs/react-flip-move "3.0.1-1"]]
 
  :nrepl {:port 8777}
 
@@ -24,6 +25,7 @@
                    :http-port 8700
                    :after-load shadow-re-frame.simple/render
                    :preloads []}}
+
   :test {:target :node-test
          :output-to "out/node-test.js"
          :autorun true}}}

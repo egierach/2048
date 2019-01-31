@@ -2,7 +2,9 @@
   "description": "Clojurescript implementation of the game 2048.",
   "repository": "",
   "license": "",
-  "scripts": {},
+  "scripts": {
+    "test": "shadow-cljs compile test && node out/node-test.js"
+  },
   "dependencies": {
     "create-react-class": "^15.6.3",
     "react": "^16.7.0",

@@ -3,6 +3,7 @@
    [reagent.core :as reagent]
    [re-frame.core :as re-frame]
    [app.events :as events]
+   [app.subs :as subs]
    [app.views :as views]
    [app.config :as config]))
 
