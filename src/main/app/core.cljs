@@ -7,7 +7,6 @@
    [app.views :as views]
    [app.config :as config]))
 
-
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)
@@ -20,5 +19,6 @@
 
 (defn ^:export init []
   (re-frame/dispatch-sync [::events/initialize-db])
+  (events/init-keyboard-event)
   (dev-setup)
   (mount-root))

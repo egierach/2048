@@ -1,18 +1,24 @@
 (ns app.views
   (:require
    [re-frame.core :as rf]
-   [cljsjs.react-flip-move]))
+   [cljsjs.react-flip-move]
+   [app.logic :as logic]))
 
-(defn tile [segment]
-  [:div.tile])
+(defn square [segment]
+  [:div {:key (:key segment)
+         :class (str "square square-bg square-" (:value segment))}
+   (when (< 0 (:value segment))
+     (:value segment))])
 
 (defn board []
-  [:div.board
-   {:on-key-press #(rf/dispatch [:app.events/on-keypress])}
+  [:div.board-surround
    [:> js/FlipMove
-    {:duration 750 :easing "ease-out"}
+    {:duration 750 :easing "ease-out" :class "board board-flip"}
     (for [segment @(rf/subscribe [:app.subs/board])]
-      [tile segment])]])
+      [square segment])]
+   [:div.board.board-bg
+    (for [segment (logic/board-zero)]
+      [square segment])]])
 
 (defn main-panel []
   [:section.section

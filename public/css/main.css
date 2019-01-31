@@ -1,21 +1,91 @@
 @import 'bulma.css';
 
-.tile {
+.square {
+    display: block;
     width: 100px;
     height: 100px;
     box-sizing: border-box;
     border-radius: 6px;
-    background: #eee4da;
     margin: 5px;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: 100px;
+}
+
+.square-bg {
+    background: rgba(238, 228, 218, 0.35);
 }
 
 .board {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.board-flip {
+    z-index: 10;
+}
+
+.board-bg {
+    position: absolute;
+    top: 5px;
+    right: 5px;;
+}
+
+.board-surround {
+    position: relative;
     width: 450px;
     height: 450px;
     box-sizing: border-box;
     border-radius: 12px;
     background: #bbada0;
-    display: flex;
-    flex-wrap: wrap;
     padding: 5px;
+}
+
+.square-0 {
+}
+
+.square-2 {
+    background-color: #eee4da;
+    font-size: 5em;
+    color: #776e65;
+}
+
+.square-4 {
+    background-color: #ede0c8;
+    font-size: 5em;
+    color: #776e65;
+}
+
+.square-8 {
+    color: #f9f6f2;
+    background-color: #f2b179;
+    font-size: 5em;
+}
+
+.square-16 {
+    color: #f9f6f2;
+    background-color: #f59563;
+    font-size: 4em;
+}
+
+.square-32 {
+    color: #f9f6f2;
+    background-color: #f67c5f;
+    font-size: 4em;
+}
+
+.square-64 {
+    color: #f9f6f2;
+    background-color: #f65e3b;
+    font-size: 4em;
+}
+
+.square-128 {
+    color: #f9f6f2;
+    background-color: #edcf72;
+    font-size: 3em;
 }

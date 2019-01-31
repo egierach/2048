@@ -11,9 +11,16 @@
             "contains sixteen total elements")
 
       (t/is (= #{0 2}
-               (set board))
+               (set (map :value board)))
             "contains only zeroes and twos")
 
       (t/is (= 4
-               (reduce + board))
+               (reduce + (map :value board)))
             "contains exactly two twos"))))
+
+(t/deftest board-zero
+  (t/testing "Elements of board have unique keys."
+    (let [board (subject/board-zero)]
+      (t/is (= 16
+               (count (set (map :key board))))
+            "contains sixteen unique keys"))))
