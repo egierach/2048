@@ -32,7 +32,7 @@
 (defn run-march
   "Makes running tests of subject/march easier to read and write."
   ([row]
-   (run-search row (constantly nil)))
+   (run-march row (constantly nil)))
   ([row callback]
    (as-> row r
      (map #(subject/board-element %) r)
@@ -80,7 +80,7 @@
                (subject/board-element 0)
                (subject/board-element 0)]]
 
-      (t/is (= (mapv :value (subject/march-right row))
+      (t/is (= (mapv :value (subject/march-right row (constantly nil)))
                [0 0 0 4])
             "row is right justified and twos are merged"))))
 
@@ -123,11 +123,11 @@
           _ (run-next-board board2 enums/right score-callback)
           score2 @score]
 
-      (t/is (= 12 score1
-               "score is 12 after first move"))
+      (t/is (= 12 score1)
+            "score is 12 after first move")
 
-      (t/is (= 24 score2
-               "score is 24 after second move")))))
+      (t/is (= (+ 24 score1) score2)
+            "score is 24 after second move"))))
 
 (defn run-upgrade-random-zero [vals]
   (->> vals
