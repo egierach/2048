@@ -4,6 +4,9 @@
    [cljsjs.react-flip-move]
    [app.logic :as logic]))
 
+(defn score []
+  [:p.score "Score: " @(rf/subscribe [:app.subs/score])])
+
 (defn square [segment]
   [:div {:key (:key segment)
          :class (str "square square-" (:value segment))}
@@ -22,4 +25,5 @@
 
 (defn main-panel []
   [:section.section
+   [score]
    [board]])

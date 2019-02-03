@@ -42,21 +42,26 @@
   "Returns a copy of row with elements at index1 and index2 merged
   if they have equal values.
 
+  If elements are merged, the merge-callback is called with the
+  value of the merged cell.  Meant to aid in score-keeping.
+
   The element at index1 is overwritten with a double-valued version
   of the element at index2, and index2's spot is back-filled with a
   zero element.
 
   Example: (merge-dups [2 2 0 0] 0 1) => [4 0 0 0]"
-  [row index1 index2]
+  [row index1 index2 merge-callback]
   (let [value1 (:value (nth row index1))
         item2 (nth row index2)
         value2 (:value item2)]
 
     (if (and (< 0 (+ value1 value2))
              (= value1 value2))
-      (assoc row
-             index1 (update item2 :value * 2)
-             index2 (board-element 0))
+      (do
+        (merge-callback (* 2 (:value item2)))
+        (assoc row
+               index1 (update item2 :value * 2)
+               index2 (board-element 0)))
       row)))
 
 (defn march-left
@@ -67,20 +72,20 @@
   Examples:
   (march [2 2 4 2]) => [4 4 2 0] ;; not [8 2 0 0]
   (march [2 2 2 2]) => [4 4 0 0] ;; not [8 0 0 0]"
-  [row]
+  [row merge-callback]
   (-> row
       (left-justify)
-      (merge-dups 0 1)
-      (merge-dups 1 2)
-      (merge-dups 2 3)
+      (merge-dups 0 1 merge-callback)
+      (merge-dups 1 2 merge-callback)
+      (merge-dups 2 3 merge-callback)
       (left-justify)))
 
 (defn march-right
   "Returns a copy of row marched to the right (reverse of march-left)."
-  [row]
+  [row merge-callback]
   (-> row
       (reverse)
-      (march-left)
+      (march-left merge-callback)
       (reverse)))
 
 (defn transpose-matrix [matrix]
@@ -101,26 +106,26 @@
     0 0 2 4        0 0 4 0
     0 0 0 0        4 0 4 2
   "
-  [current-board action]
+  [current-board action merge-callback]
   (let [rows (partition 4 current-board)]
     (cond
       (= action enums/left)
-      (flatten (map march-left rows))
+      (flatten (map #(march-left % merge-callback) rows))
 
       (= action enums/right)
-      (flatten (map march-right rows))
+      (flatten (map #(march-right % merge-callback) rows))
 
       (= action enums/up)
       (->> rows
            (transpose-matrix)
-           (map march-left)
+           (map #(march-left % merge-callback))
            (transpose-matrix)
            (flatten))
 
       (= action enums/down)
       (->> rows
            (transpose-matrix)
-           (map march-right)
+           (map #(march-right % merge-callback))
            (transpose-matrix)
            (flatten))
 

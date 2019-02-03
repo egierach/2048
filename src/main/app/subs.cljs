@@ -6,3 +6,8 @@
  ::board
  (fn [db _]
    (:board db)))
+
+(rf/reg-sub
+ ::score
+ (fn [db _]
+   (:score db)))

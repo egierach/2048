@@ -11,11 +11,15 @@
   (.addEventListener js/document
                      "keydown"
                      (fn [e]
-                       (rf/dispatch [::on-keydown (.-key e)]))))
+                       (rf/dispatch [::on-keydown (.-key e)])
+                       (.preventDefault e))))
+
+(defn dispatch-score [s]
+  (rf/dispatch [::score s]))
 
 (defn next-board [board key-pressed]
   (-> board
-      (logic/next-board key-pressed)
+      (logic/next-board key-pressed dispatch-score)
       (logic/upgrade-random-zero)))
 
 (defn handle-keypress
@@ -27,6 +31,11 @@
            :last-key key-pressed)
     db))
 
+(defn handle-score
+  "Updates the game state based on scoring event occurring."
+  [db [_ score]]
+  (update db :score + score))
+
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
@@ -35,3 +44,7 @@
 (rf/reg-event-db
  ::on-keydown
  handle-keypress)
+
+(rf/reg-event-db
+ ::score
+ handle-score)

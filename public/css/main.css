@@ -1,5 +1,11 @@
 @import 'bulma.css';
 
+.score {
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+}
+
 .square {
     display: block;
     width: 100px;

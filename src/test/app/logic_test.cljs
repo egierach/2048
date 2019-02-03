@@ -31,11 +31,13 @@
 
 (defn run-march
   "Makes running tests of subject/march easier to read and write."
-  [row]
-  (->> row
-       (map #(subject/board-element %))
-       (subject/march-left)
-       (mapv :value)))
+  ([row]
+   (run-search row (constantly nil)))
+  ([row callback]
+   (as-> row r
+     (map #(subject/board-element %) r)
+     (subject/march-left r callback)
+     (mapv :value r))))
 
 (t/deftest march-left
   (t/testing "a whole bunch of cases"
@@ -82,11 +84,14 @@
                [0 0 0 4])
             "row is right justified and twos are merged"))))
 
-(defn run-next-board [board action]
-  (as-> board b
-    (map #(subject/board-element %) b)
-    (subject/next-board b action)
-    (map :value b)))
+(defn run-next-board
+  ([board action]
+   (run-next-board board action (constantly nil)))
+  ([board action callback]
+   (as-> board b
+     (map #(subject/board-element %) b)
+     (subject/next-board b action callback)
+     (map :value b))))
 
 (t/deftest next-board
   (t/testing "up works"
@@ -99,7 +104,30 @@
               4 0 4 8
               0 0 0 0
               0 0 0 0])
-          "looks marched upward")))
+          "looks marched upward"))
+
+  (t/testing "scoring works"
+    (let [score (atom 0)
+          score-callback (fn [s] (swap! score + s))
+          board1 [0 0 0 2
+                  4 0 0 2
+                  0 0 0 0
+                  4 0 0 0]
+          _ (run-next-board board1 enums/up score-callback)
+          score1 @score
+
+          board2 [4 4 4 4
+                  2 2 2 2
+                  0 0 0 0
+                  0 0 0 0]
+          _ (run-next-board board2 enums/right score-callback)
+          score2 @score]
+
+      (t/is (= 12 score1
+               "score is 12 after first move"))
+
+      (t/is (= 24 score2
+               "score is 24 after second move")))))
 
 (defn run-upgrade-random-zero [vals]
   (->> vals
