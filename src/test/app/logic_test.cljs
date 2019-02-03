@@ -19,12 +19,15 @@
                (reduce + (map :value board)))
             "contains exactly two twos"))))
 
-(t/deftest n-zeroes
-  (t/testing "Returned elements have unique keys."
-    (let [board (subject/n-zeroes 16)]
+(t/deftest n-squares
+  (t/testing "Returned elements have unique keys and the right value."
+    (let [board (subject/n-squares 16 0)]
       (t/is (= 16
                (count (set (map :key board))))
-            "contains sixteen unique keys"))))
+            "contains sixteen unique keys")
+
+      (t/is (= #{0}
+               (into #{} (map :value board)))))))
 
 (defn run-march
   "Makes running tests of subject/march easier to read and write."
@@ -97,3 +100,32 @@
               0 0 0 0
               0 0 0 0])
           "looks marched upward")))
+
+(defn run-upgrade-random-zero [vals]
+  (->> vals
+       (map #(subject/board-element %))
+       (subject/upgrade-random-zero)
+       (map :value)))
+
+(t/deftest upgrade-random-zero
+  (t/testing "one fewer zero with same number of elements"
+    (let [input [0 4 8 0]
+          result (run-upgrade-random-zero input)]
+
+      (t/is (= (count input) (count result))
+            "same number of elements")
+
+      (t/is (> (reduce + result)
+               (reduce + input))
+            "result is greater than input")
+
+      (t/is (= (+ 1 (count (filter zero? result)))
+               (count (filter zero? input)))
+            "one fewer zero in result")))
+
+  (t/testing "does nothing with full board"
+    (let [input [2 4 8 4]
+          result (run-upgrade-random-zero input)]
+
+      (t/is (= input result)
+            "input and result are the same"))))

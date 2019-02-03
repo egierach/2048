@@ -6,7 +6,7 @@
 
 (defn square [segment]
   [:div {:key (:key segment)
-         :class (str "square square-bg square-" (:value segment))}
+         :class (str "square square-" (:value segment))}
    (when (< 0 (:value segment))
      (:value segment))])
 
@@ -17,7 +17,7 @@
     (for [segment @(rf/subscribe [:app.subs/board])]
       [square segment])]
    [:div.board.board-bg
-    (for [segment (logic/n-zeroes 16)]
+    (for [segment (logic/n-squares 16 "bg")]
       [square segment])]])
 
 (defn main-panel []

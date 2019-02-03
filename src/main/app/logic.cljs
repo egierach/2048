@@ -12,10 +12,10 @@
   [value]
   {:key (next-key) :value value})
 
-(defn n-zeroes
-  "Returns a vector of n board elements with a value of zero."
-  [n]
-  (vec (repeatedly n #(board-element 0))))
+(defn n-squares
+  "Returns a vector of n board elements with value v."
+  [n v]
+  (vec (repeatedly n #(board-element v))))
 
 (defn initial-board
   "Returns a 16 element vector of 0 elements with two randomly-placed 2's.
@@ -23,7 +23,7 @@
   []
   (let [board-positions (shuffle (range 0 16))
         [a b] (take 2 board-positions)]
-    (-> (n-zeroes 16)
+    (-> (n-squares 16 0)
         vec
         (assoc a (board-element 2))
         (assoc b (board-element 2)))))
@@ -36,7 +36,7 @@
   [row]
   (let [without-zeroes (vec (remove #(zero? (:value %)) row))]
     (vec (into without-zeroes
-               (n-zeroes (- (count row) (count without-zeroes)))))))
+               (n-squares (- (count row) (count without-zeroes)) 0)))))
 
 (defn merge-dups
   "Returns a copy of row with elements at index1 and index2 merged
@@ -102,31 +102,45 @@
     0 0 0 0        4 0 4 2
   "
   [current-board action]
-  (let [rows (partition 4 current-board)
-        transpose-fn (fn [matrix] (apply mapv vector matrix))]
-
+  (let [rows (partition 4 current-board)]
     (cond
       (= action enums/left)
-      (vec (flatten (mapv march-left rows)))
+      (flatten (map march-left rows))
 
       (= action enums/right)
-      (vec (flatten (mapv march-right rows)))
+      (flatten (map march-right rows))
 
       (= action enums/up)
       (->> rows
-           (transpose-fn)
-           (mapv march-left)
-           (transpose-fn)
-           (flatten)
-           (vec))
+           (transpose-matrix)
+           (map march-left)
+           (transpose-matrix)
+           (flatten))
 
       (= action enums/down)
       (->> rows
-           (transpose-fn)
-           (mapv march-right)
-           (transpose-fn)
-           (flatten)
-           (vec))
+           (transpose-matrix)
+           (map march-right)
+           (transpose-matrix)
+           (flatten))
 
       :else
       current-board)))
+
+(defn upgrade-random-zero
+  "Returns a copy of board with a random zero-valued element's value increased
+  to either 2 or 4.
+
+  The replacement values for the chosen zero element will be 2's roughly 80%
+  of the time."
+  [board]
+  (let [values-index (map-indexed vector (map :value board))
+        zeroes (filter #(zero? (second %)) values-index)
+        replacement-value (rand-nth [2 2 2 2 4])]
+    (if (empty? zeroes)
+      board
+      (let [random-index (first (rand-nth zeroes))]
+        (as-> random-index z
+          (nth board z)
+          (update z :value + replacement-value)
+          (assoc (vec board) random-index z))))))

@@ -13,12 +13,17 @@
                      (fn [e]
                        (rf/dispatch [::on-keydown (.-key e)]))))
 
+(defn next-board [board key-pressed]
+  (-> board
+      (logic/next-board key-pressed)
+      (logic/upgrade-random-zero)))
+
 (defn handle-keypress
   "Updates the game state based on an arrow key being pressed."
   [db [_ key-pressed]]
   (if (enums/arrows key-pressed)
     (assoc db
-           :board (logic/next-board (:board db) key-pressed)
+           :board (next-board (:board db) key-pressed)
            :last-key key-pressed)
     db))
 
