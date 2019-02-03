@@ -102,3 +102,21 @@
     background-color: #edcc61;
     font-size: 3em;
 }
+
+.square-512 {
+    color: #f9f6f2;
+    background-color: #edc850;
+    font-size: 3em;
+}
+
+.square-1024 {
+    color: #f9f6f2;
+    background-color: #edc53f;
+    font-size: 2.5em;
+}
+
+.square-2048 {
+    color: #f9f6f2;
+    background-color: #edc22e;
+    font-size: 2.4em;
+}
