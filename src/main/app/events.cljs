@@ -41,6 +41,11 @@
        :app.effects/release-keyboard {}}
       {:db (:db cofx)})))
 
+(defn handle-game-over-acknowledged
+  "Closes 'game over' modal when player dismisses it."
+  [db _]
+  (assoc db :game-over false))
+
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
@@ -61,3 +66,7 @@
 (rf/reg-event-fx
  ::endgame-monitor-tick
  handle-endgame-monitor-tick)
+
+(rf/reg-event-db
+ ::game-over-acknowledged
+ handle-game-over-acknowledged)

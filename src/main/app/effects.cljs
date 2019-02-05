@@ -2,19 +2,25 @@
   (:require
    [re-frame.core :as rf]))
 
+(defn keydown-listener
+  "Handles the raw javascript event to keep re-frame pure."
+  [e]
+  (rf/dispatch [:app.events/on-keydown (.-key e)])
+  (.preventDefault e))
+
 (defn capture-the-keyboard!
   "Adds an event listener to the root document for keydown events."
   []
   (.addEventListener js/document
                      "keydown"
-                     (fn [e]
-                       (rf/dispatch [:app.events/on-keydown (.-key e)])
-                       (.preventDefault e))))
+                     keydown-listener))
 
 (defn release-the-keyboard!
   "Removes any event listener on keydown from the root document."
   []
-  (.removeEventListener js/document "keydown"))
+  (.removeEventListener js/document
+                        "keydown"
+                        keydown-listener))
 
 
 (def endgame-timer (atom nil))

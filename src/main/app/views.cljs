@@ -5,10 +5,7 @@
    [app.logic :as logic]))
 
 (defn score []
-  [:p.control
-   [:span.tags.has-addons
-    [:span.tag.is-large.score "Score"]
-    [:span.tag.is-large.is-success @(rf/subscribe [:app.subs/score])]]])
+  [:p.score "Score: "@(rf/subscribe [:app.subs/score])])
 
 (defn new-game-button [title]
   [:p.control
@@ -50,7 +47,30 @@
       [square segment])]
    [instructions]])
 
+(defn game-over-overlay []
+  (let [winner @(rf/subscribe [:app.subs/did-player-win?])]
+    [:div
+     {:class (str "modal"
+                  (if @(rf/subscribe [:app.subs/is-game-over?])
+                    " is-active"
+                    ""))}
+     [:div.modal-background]
+     [:div.modal-content.game-over-modal
+      [:div.box
+       [:p.header (if winner "You won!" "Game Over")]
+       [:p (str "Your Score: " @(rf/subscribe [:app.subs/score]))]
+       [:p (if winner
+             "Studies show that winning is good for you.  Cheers to your health!"
+             "You'll get it eventually.  Keep trying!")]
+       [:p
+        [:button.button.is-success
+         {:on-click #(rf/dispatch [:app.events/game-over-acknowledged])}
+         "Word"]]]]
+     [:button.modal-close.is-large
+      {:on-click #(rf/dispatch [:app.events/game-over-acknowledged])}]]))
+
 (defn main-panel []
   [:div
    [control-panel]
-   [board]])
+   [board]
+   [game-over-overlay]])

@@ -142,30 +142,35 @@
       current-board)))
 
 (defn upgrade-random-zero
-  "Returns a copy of board with a random zero-valued element's value increased
+  "Returns a copy of new-board with a random zero-valued element's value increased
   to either 2 or 4.
+
+  No upgrade will take place if previous-board and new-board are equal, or if
+  there are no zero-valued elements left in new-board.
 
   The replacement values for the chosen zero element will be 2's roughly 80%
   of the time."
-  [board]
-  (let [values-index (map-indexed vector (map :value board))
+  [previous-board new-board]
+  (let [values-index (map-indexed vector (map :value new-board))
         zeroes (filter #(zero? (second %)) values-index)
         replacement-value (rand-nth [2 2 2 2 4])]
-    (if (empty? zeroes)
-      board
+    (if (or (= (map :value previous-board)
+               (map :value new-board))
+            (empty? zeroes))
+      new-board
       (let [random-index (first (rand-nth zeroes))]
         (as-> random-index z
-          (nth board z)
+          (nth new-board z)
           (update z :value + replacement-value)
-          (assoc (vec board) random-index z))))))
+          (assoc (vec new-board) random-index z))))))
 
 (defn evaluate-move
   "Return a new version of the board that has been altered according
   to the player input and the game's rules."
   [current-board key-pressed score-callback]
-  (-> current-board
-      (resolve-input key-pressed score-callback)
-      (upgrade-random-zero)))
+  (as-> current-board b
+    (resolve-input b key-pressed score-callback)
+    (upgrade-random-zero current-board b)))
 
 (defn win?
   "Returns true if the board has any squares with value 2048, and false otherwise."
