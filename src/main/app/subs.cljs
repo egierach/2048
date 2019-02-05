@@ -11,3 +11,8 @@
  ::score
  (fn [db _]
    (:score db)))
+
+(rf/reg-sub
+ ::is-playing?
+ (fn [db _]
+   (:playing db)))

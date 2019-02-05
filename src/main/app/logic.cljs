@@ -51,12 +51,10 @@
 
   Example: (merge-dups [2 2 0 0] 0 1) => [4 0 0 0]"
   [row index1 index2 merge-callback]
-  (let [value1 (:value (nth row index1))
-        item2 (nth row index2)
-        value2 (:value item2)]
-
-    (if (and (< 0 (+ value1 value2))
-             (= value1 value2))
+  (let [item1 (nth row index1)
+        item2 (nth row index2)]
+    (if (and (< 0 (:value item1))
+             (= (:value item1) (:value item2)))
       (do
         (merge-callback (* 2 (:value item2)))
         (assoc row
@@ -64,21 +62,30 @@
                index2 (board-element 0)))
       row)))
 
+(defn all-neighbors
+  "Returns a list of index pairs for all neighboring elements in row.
+
+  Example: (all-neighbors [:a :b :c :d]) => ([0 1] [1 2] [2 3])"
+  [row]
+  (let [indices (range (count row))]
+    (map vector indices (drop 1 indices))))
+
 (defn march-left
   "Returns a copy of row with non-zero elements marched toward
   the left and duplicates merged.
-  
+
   Compound merges are not allowed, but parallel merges are.
   Examples:
-  (march [2 2 4 2]) => [4 4 2 0] ;; not [8 2 0 0]
-  (march [2 2 2 2]) => [4 4 0 0] ;; not [8 0 0 0]"
+  (march-left [2 2 4 2]) => [4 4 2 0] ;; not [8 2 0 0]
+  (march-left [2 2 2 2]) => [4 4 0 0] ;; not [8 0 0 0]"
   [row merge-callback]
-  (-> row
-      (left-justify)
-      (merge-dups 0 1 merge-callback)
-      (merge-dups 1 2 merge-callback)
-      (merge-dups 2 3 merge-callback)
-      (left-justify)))
+  (let [row-as-vector (vec row)
+        justified (left-justify row-as-vector)
+        merged (reduce (fn [r [i1 i2]]
+                         (merge-dups r i1 i2 merge-callback))
+                       justified
+                       (all-neighbors row))]
+    (left-justify merged)))
 
 (defn march-right
   "Returns a copy of row marched to the right (reverse of march-left)."
@@ -88,24 +95,26 @@
       (march-left merge-callback)
       (reverse)))
 
-(defn transpose-matrix [matrix]
+(defn transpose-matrix
+  "Takes a collection of collections representing a matrix as a series of rows
+  and returns a series of vectors representing the matrix as columns.
+
+  Example: (transpose-matrix [[1 2 3]     [[1 4 7]
+                              [4 5 6]  =>  [2 5 8]
+                              [7 8 9]])    [3 6 9]]"
+  [matrix]
   (apply mapv vector matrix))
 
-(defn next-board
+(defn resolve-input
   "Resolves the input action on the current board to produce the next.
 
-    0 0 2 2        0 0 2 2
-    2 0 2 0        2 0 2 0
-    2 0 4 0        2 0 4 0
-    0 0 0 0        0 0 0 0
-
-  + rightArrow   + downArrow
-  -------------  ------------
-    0 0 0 4        0 0 0 0
-    0 0 0 4        0 0 0 0
-    0 0 2 4        0 0 4 0
-    0 0 0 0        4 0 4 2
-  "
+  Assumes a 4x4 board.
+  Example: (resolve-input [2 2 2 2        [4 4 0 0
+                           0 2 2 2         4 2 0 0
+                           0 0 2 2    =>   4 0 0 0
+                           0 0 0 2]        2 0 0 0]
+                          enums/left
+                          callback)"
   [current-board action merge-callback]
   (let [rows (partition 4 current-board)]
     (cond
@@ -149,3 +158,25 @@
           (nth board z)
           (update z :value + replacement-value)
           (assoc (vec board) random-index z))))))
+
+(defn evaluate-move
+  "Return a new version of the board that has been altered according
+  to the player input and the game's rules."
+  [current-board key-pressed score-callback]
+  (-> current-board
+      (resolve-input key-pressed score-callback)
+      (upgrade-random-zero)))
+
+(defn win?
+  "Returns true if the board has any squares with value 2048, and false otherwise."
+  [board]
+  (some? (seq (filter #(= 2048 (:value %)) board))))
+
+(defn game-over?
+  "Returns true if there are no more possible moves, false otherwise."
+  [board]
+  (let [up-board (resolve-input board enums/up (constantly nil))
+        down-board (resolve-input board enums/down (constantly nil))
+        left-board (resolve-input board enums/left (constantly nil))
+        right-board (resolve-input board enums/right (constantly nil))]
+    (= up-board down-board left-board right-board)))

@@ -1,9 +1,63 @@
 @import 'bulma.css';
 
-.score {
+.page {
+    width: 500px;
+    margin: auto;
+}
+
+.control-panel {
+    width: 450px;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    color: #776e65;
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+
+.score {
+    background: #776e65;
+    color: #eee4da;
+}
+
+.game-title {
     font-weight: bold;
-    font-size: 2em;
+    font-size: 3.4em;
+    float: left;
+    line-height: 60px;
+    height: 60px;
+}
+
+.game-controls {
+    float: right;
+    line-height: 60px;
+    height: 60px;
+}
+
+.board {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.board-flip {
+    z-index: 10;
+}
+
+.board-bg {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.board-surround {
+    position: relative;
+    width: 450px;
+    height: 450px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: #bbada0;
+    padding: 5px;
 }
 
 .square {
@@ -23,33 +77,6 @@
     background: rgba(238, 228, 218, 0.35);
 }
 
-.board {
-    position: relative;
-    width: 440px;
-    height: 440px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.board-flip {
-    z-index: 10;
-}
-
-.board-bg {
-    position: absolute;
-    top: 5px;
-    right: 5px;;
-}
-
-.board-surround {
-    position: relative;
-    width: 450px;
-    height: 450px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    background: #bbada0;
-    padding: 5px;
-}
 
 .square-0 {
     background: rgba(238, 228, 218, 0.0);
@@ -119,4 +146,19 @@
     color: #f9f6f2;
     background-color: #edc22e;
     font-size: 2.4em;
+}
+
+.instructions {
+    position: absolute;
+    margin: 50px;
+    width: 350px;
+    top: 0;
+    z-index: 20;
+    padding: 20px;
+    color: #776e65;
+}
+
+.instructions > .header {
+    font-size: 2em;
+    font-weight: bold;
 }
