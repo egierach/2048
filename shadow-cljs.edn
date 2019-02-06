@@ -18,7 +18,7 @@
         :asset-path "/js"
 
         :compiler-options {:closure-warnings {:global-this :off}
-                           :optimizations :whitespace}
+                           :optimizations :advanced}
 
         :devtools {:http-root "public"
                    :http-handler shadow.http.push-state/handle
