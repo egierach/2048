@@ -1,5 +1,7 @@
 # 2048
-Clojurescript/Re-frame implementation of the game 2048
+Clojurescript/Re-frame implementation of the game 2048.
+
+Try it here: <https://egierach.github.io/2048/public>
 
 ## Setup
 If you don't already have shadow-cljs installed, install it with:
