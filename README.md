@@ -18,7 +18,7 @@ Start shadow-cljs:
 shadow-cljs watch app
 ```
 
-In your browser, visit [http://localhost:8700].
+In your browser, visit <http://localhost:8700>.
 
 ## Running the tests
 Run:
