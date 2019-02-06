@@ -154,33 +154,43 @@
       (t/is (= (+ 24 score1) score2)
             "score is 24 after second move"))))
 
-(defn run-upgrade-random-zero [vals]
-  (->> vals
-       (map #(subject/board-element %))
-       (subject/upgrade-random-zero)
-       (map :value)))
+(defn run-upgrade-random-zero [old new]
+  (let [old-board (map #(subject/board-element %) old)
+        new-board (map #(subject/board-element %) new)]
+    (->> (subject/upgrade-random-zero old-board new-board)
+         (map :value))))
 
 (t/deftest upgrade-random-zero
   (t/testing "one fewer zero with same number of elements"
-    (let [input [0 4 8 0]
-          result (run-upgrade-random-zero input)]
+    (let [old [0 4 8 0]
+          new [0 4 8 2]
+          result (run-upgrade-random-zero old new)]
 
-      (t/is (= (count input) (count result))
+      (t/is (= (count new) (count result))
             "same number of elements")
 
       (t/is (> (reduce + result)
-               (reduce + input))
+               (reduce + new))
             "result is greater than input")
 
       (t/is (= (+ 1 (count (filter zero? result)))
-               (count (filter zero? input)))
+               (count (filter zero? new)))
             "one fewer zero in result")))
 
   (t/testing "does nothing with full board"
-    (let [input [2 4 8 4]
-          result (run-upgrade-random-zero input)]
+    (let [old [2 4 8 0]
+          new [2 4 8 4]
+          result (run-upgrade-random-zero old new)]
 
-      (t/is (= input result)
+      (t/is (= new result)
+            "input and result are the same")))
+
+  (t/testing "does nothing when old and new boards are the same"
+    (let [old [2 4 8 0]
+          new [2 4 8 0]
+          result (run-upgrade-random-zero old new)]
+
+      (t/is (= new result)
             "input and result are the same"))))
 
 (t/deftest win?
