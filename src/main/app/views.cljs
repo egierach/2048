@@ -34,7 +34,9 @@
     [:div.notification.instructions
      [:p.header "To Play:"]
      [:p "Click the \"Play Game\" button above."]
-     [:p "Then, move the tiles with your arrow keys."]]))
+     [:p "Then, move the tiles with your arrow keys."]
+     [:br]
+     [:p "The object of the game is to make a single tile with the value '2048' in it."]]))
 
 (defn board []
   [:div.board-surround
@@ -62,6 +64,7 @@
        [:p (if winner
              "Studies show that winning is good for you.  Cheers to your health!"
              "You'll get it eventually.  Keep trying!")]
+       [:br]
        [:p
         [:button.button.is-success
          {:on-click #(rf/dispatch [:app.events/game-over-acknowledged])}
