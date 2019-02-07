@@ -3,11 +3,12 @@
    [cljs.test :as t]
    [app.db :as db]
    [app.enums :as enums]
-   [app.logic :as logic]
+   [app.game.board :as board]
+   [app.game.logic :as logic]
    [app.events :as subject]))
 
 (defn run-keypress [values key]
-  (let [board (map #(logic/board-element %) values)
+  (let [board (map #(board/board-element %) values)
         old-db {:board board}
         new-db (subject/handle-keypress old-db [nil key])]
     (map :value (:board new-db))))

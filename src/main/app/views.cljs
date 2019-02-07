@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [cljsjs.react-flip-move]
-   [app.logic :as logic]))
+   [app.game.board :as board]))
 
 (defn score []
   [:p.score "Score: "@(rf/subscribe [:app.subs/score])])
@@ -45,7 +45,7 @@
     (for [segment @(rf/subscribe [:app.subs/board])]
       [square segment])]
    [:div.board.board-bg
-    (for [segment (logic/n-squares 16 "bg")]
+    (for [segment (board/n-board-elements 16 "bg")]
       [square segment])]
    [instructions]])
 

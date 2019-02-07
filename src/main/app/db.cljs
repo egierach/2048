@@ -1,8 +1,8 @@
 (ns app.db
-  (:require [app.logic :as logic]))
+  (:require [app.game.board :as board]))
 
 (def default-db
-  {:board (logic/n-squares 16 0)
+  {:board (board/n-board-elements 16 0)
    :score 0
    :playing false
    :game-over false
@@ -10,7 +10,7 @@
 
 (defn start-game [db]
   (assoc db
-         :board (logic/initial-board)
+         :board (board/initial-board)
          :score 0
          :playing true
          :game-over false

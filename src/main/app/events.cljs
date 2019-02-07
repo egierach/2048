@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [app.db :as db]
    [app.enums :as enums]
-   [app.logic :as logic]))
+   [app.game.logic :as logic]))
 
 (defn handle-game-start
   "Initializes the game state for a new game."
