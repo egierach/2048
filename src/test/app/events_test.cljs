@@ -2,7 +2,7 @@
   (:require
    [cljs.test :as t]
    [app.db :as db]
-   [app.enums :as enums]
+   [app.game.enums :as enums]
    [app.game.board :as board]
    [app.game.logic :as logic]
    [app.events :as subject]))

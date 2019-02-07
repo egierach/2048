@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [app.db :as db]
-   [app.enums :as enums]
+   [app.game.enums :as enums]
    [app.game.logic :as logic]))
 
 (defn handle-game-start

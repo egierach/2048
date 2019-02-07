@@ -1,7 +1,7 @@
 (ns app.game.logic-test
   (:require
    [cljs.test :as t]
-   [app.enums :as enums]
+   [app.game.enums :as enums]
    [app.game.board :as board]
    [app.game.logic :as subject]))
 

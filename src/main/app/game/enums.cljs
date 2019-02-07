@@ -1,4 +1,4 @@
-(ns app.enums)
+(ns app.game.enums)
 
 ;; keycodes for arrow keys
 (def left "ArrowLeft")

@@ -2,7 +2,7 @@
   "Functions that process player input, move the game forward,
   keep score, and test for win/loss conditions."
   (:require
-   [app.enums :as enums]
+   [app.game.enums :as enums]
    [app.game.board :as board]))
 
 
