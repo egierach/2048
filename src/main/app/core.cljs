@@ -3,9 +3,9 @@
    [reagent.core :as reagent]
    [re-frame.core :as rf]
    [app.config :as config]
-   [app.effects :as effects]
-   [app.events :as events]
-   [app.subs :as subs]
+   [app.effects]
+   [app.events]
+   [app.subs]
    [app.views :as views]))
 
 (defn dev-setup []
@@ -19,6 +19,6 @@
                   (.getElementById js/document "app")))
 
 (defn ^:export init []
-  (rf/dispatch-sync [::events/initialize-db])
+  (rf/dispatch-sync [:app.events/initialize-db])
   (dev-setup)
   (mount-root))
